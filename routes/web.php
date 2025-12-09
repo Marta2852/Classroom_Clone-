@@ -10,6 +10,7 @@ use App\Http\Controllers\Student\ClassJoinController;
 use App\Http\Controllers\Teacher\ClassroomController;
 use App\Http\Controllers\Teacher\AssignmentController;
 use App\Http\Controllers\Teacher\SubmissionController;
+use App\Http\Controllers\DashboardController;
 
 
 // =========================
@@ -17,12 +18,14 @@ use App\Http\Controllers\Teacher\SubmissionController;
 // =========================
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+
+
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 
 // =========================
@@ -44,7 +47,11 @@ Route::middleware(['auth', 'role:admin'])->get('/admin', fn() => view('dashboard
 
 Route::middleware(['auth', 'role:teacher'])->get('/teacher', fn() => view('dashboards.teacher'));
 
-Route::middleware(['auth', 'role:student'])->get('/student', fn() => view('dashboards.student'));
+Route::middleware(['auth', 'role:student'])->group(function () {
+    Route::get('/student', function () {
+        return view('dashboards.student');
+    })->name('student');
+});
 
 
 // Laravel Breeze Auth Routes
@@ -101,7 +108,12 @@ Route::middleware(['auth', 'role:teacher'])
         // ---------- GRADING SUBMISSIONS ----------
         Route::post('/submissions/{submission}/grade', [SubmissionController::class, 'grade'])
             ->name('submissions.grade');
+
+        // ---------- GRADING PANEL ----------
+        Route::get('/grading', [SubmissionController::class, 'grading'])
+            ->name('grading.index');
     });
+
 
 Route::middleware(['auth', 'role:student'])
     ->prefix('student')
@@ -117,3 +129,37 @@ Route::middleware(['auth', 'role:student'])
 
    Route::get('/join/{code}', [ClassJoinController::class, 'joinFromQr'])
     ->name('join.qr');
+
+
+Route::middleware(['auth', 'role:student'])->group(function () {
+
+    Route::get('/student/join', 
+        [\App\Http\Controllers\Student\ClassJoinController::class, 'form']
+    )->name('student.join');
+
+    Route::post('/student/join', 
+        [\App\Http\Controllers\Student\ClassJoinController::class, 'join']
+    )->name('student.join.submit');
+
+});
+
+Route::middleware(['auth', 'role:student'])->group(function () {
+
+    Route::get('/student', function () {
+        return redirect()->route('student.classes');
+    })->name('student');
+
+    Route::get('/student/classes', [\App\Http\Controllers\Student\StudentClassController::class, 'index'])
+        ->name('student.classes');
+
+    Route::get('/student/classes/{classroom}/assignments',
+        [\App\Http\Controllers\Student\StudentAssignmentController::class, 'index']
+    )->name('student.assignments.index');
+
+    Route::get('/student/assignments/{assignment}',
+        [\App\Http\Controllers\Student\StudentAssignmentController::class, 'show']
+    )->name('student.assignments.show');
+
+});
+
+

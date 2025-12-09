@@ -10,12 +10,19 @@ class Classroom extends Model
         'teacher_id',
         'name',
         'description',
+        'join_code',
     ];
 
     public function teacher()
     {
         return $this->belongsTo(User::class, 'teacher_id');
     }
+
+    public function students()
+    {
+        return $this->belongsToMany(User::class, 'classroom_student', 'classroom_id', 'student_id');
+    }
+
 
     public function assignments()
     {

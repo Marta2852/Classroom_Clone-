@@ -1,65 +1,96 @@
 <x-app-layout>
-    <div class="p-6">
 
-        <!-- Assignment Header -->
-        <h1 class="text-3xl font-bold">{{ $assignment->title }}</h1>
+    <div class="pink-theme p-6">
 
-        <p class="mt-2 text-gray-600 dark:text-gray-300">
-            {{ $assignment->description }}
-        </p>
+        <h1 class="page-title">{{ $assignment->title }}</h1>
+        <p class="text-gray-700 mt-2">{{ $assignment->description }}</p>
 
+        <!-- Download Assignment File -->
         @if($assignment->file_path)
             <a href="{{ asset('storage/' . $assignment->file_path) }}"
-               class="mt-4 inline-block bg-gray-700 text-white px-4 py-2 rounded">
-                Download Attached File
+               download
+               class="btn-primary mt-4 inline-block">
+                📄 Download Assignment File
             </a>
         @endif
 
 
-        <!-- Submissions Section -->
+        <!-- Submissions List -->
         <div class="mt-10">
-            <h2 class="text-2xl font-semibold mb-4">Student Submissions</h2>
+            <h2 class="text-2xl font-bold text-pink-900">Student Submissions</h2>
 
-            @forelse($assignment->submissions as $submission)
-                <div class="p-4 border rounded bg-white dark:bg-gray-800 mb-4">
+            @if($assignment->submissions->count() === 0)
+                <p class="text-gray-600 mt-3">
+                    No students have submitted this assignment yet.
+                </p>
+            @else
 
-                    <p class="font-semibold">
-                        {{ $submission->student->name }}
-                        <span class="text-gray-400">({{ $submission->student->email }})</span>
-                    </p>
+                <div class="mt-4 space-y-4">
 
-                    @if($submission->comment)
-                        <p class="mt-2 text-gray-300 italic">
-                            Student comment: "{{ $submission->comment }}"
-                        </p>
-                    @endif
+                    @foreach($assignment->submissions as $submission)
+                        <div class="card">
 
-                    <a href="{{ asset('storage/' . $submission->file_path) }}"
-                       class="text-blue-600 underline block mt-2">
-                        Download Submission
-                    </a>
-                    
-                    <!-- Grading Form -->
-                    <form action="{{ route('teacher.submissions.grade', $submission) }}" method="POST" class="mt-3 inline-flex items-center gap-2">
-                        @csrf
+                            <div class="flex justify-between items-center">
 
-                        <input type="number" 
-                               name="grade" 
-                               min="0" max="100"
-                               value="{{ $submission->grade }}"
-                               class="border p-2 rounded w-24">
+                                <div>
+                                    <p class="font-semibold text-pink-900">
+                                        {{ $submission->student->name }}
+                                    </p>
 
-                        <button class="bg-blue-600 text-white px-3 py-1 rounded">
-                            Save Grade
-                        </button>
-                    </form>
+                                    <p class="text-gray-600 text-sm">
+                                        Submitted: {{ $submission->created_at->format('M d, Y H:i') }}
+                                    </p>
+
+                                    @if($submission->grade)
+                                        <p class="text-green-700 font-bold mt-1">
+                                            Grade: {{ $submission->grade }}/10
+                                        </p>
+                                    @else
+                                        <p class="text-yellow-700 font-bold mt-1">
+                                            Not graded yet
+                                        </p>
+                                    @endif
+                                </div>
+
+                                <div class="flex space-x-3">
+
+                                    <!-- Download Submission -->
+                                    <a href="{{ asset('storage/' . $submission->file_path) }}"
+                                       download
+                                       class="btn-secondary">
+                                        ⬇ Download
+                                    </a>
+
+                                    <!-- Grade Form -->
+                                    <form action="{{ route('teacher.submissions.grade', $submission) }}"
+                                          method="POST"
+                                          class="flex items-center space-x-2">
+                                        @csrf
+
+                                        <input type="number"
+                                               name="grade"
+                                               min="1"
+                                               max="10"
+                                               class="border border-pink-300 rounded px-2 py-1 w-20"
+                                               placeholder="1–10">
+
+                                        <button class="btn-primary">
+                                            Grade
+                                        </button>
+                                    </form>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    @endforeach
 
                 </div>
+            @endif
 
-            @empty
-                <p class="text-gray-500">No submissions yet.</p>
-            @endforelse
         </div>
 
     </div>
+
 </x-app-layout>

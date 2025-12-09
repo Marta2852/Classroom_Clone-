@@ -21,21 +21,23 @@ class ClassroomController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required',
-            'description' => 'nullable',
-        ]);
+{
+    $request->validate([
+        'name' => 'required',
+        'description' => 'nullable',
+    ]);
 
-        $joinCode = strtoupper(Str::random(6)); // Example: "85XYQT"
+    $joinCode = strtoupper(Str::random(6)); // Example: "85XYQT"
 
-        Classroom::create([
-            'teacher_id' => auth()->id(),
-            'name' => $request->name,
-            'description' => $request->description,
-            'join_code' => $joinCode,
-]);
+    Classroom::create([
+        'teacher_id'   => auth()->id(),
+        'name'         => $request->name,
+        'description'  => $request->description,
+        'join_code'    => $joinCode,   // <-- VERY IMPORTANT
+    ]);
 
-        return redirect()->route('teacher.classes.index')->with('success', 'Class created!');
-    }
+    return redirect()
+        ->route('teacher.classes.index')
+        ->with('success', 'Class created!');
+}
 }

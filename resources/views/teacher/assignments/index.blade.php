@@ -1,25 +1,23 @@
 <x-app-layout>
-    <div class="p-6">
+    <div class="max-w-5xl mx-auto p-6">
 
-        <h1 class="text-3xl font-bold">
+        <h1 class="text-3xl font-bold text-pink-900 mb-6">
             Assignments for {{ $classroom->name }}
         </h1>
 
         <a href="{{ route('teacher.assignments.create', $classroom) }}"
-           class="mt-4 inline-block bg-blue-600 text-white px-4 py-2 rounded">
+           class="bg-pink-700 text-white px-4 py-2 rounded hover:bg-pink-800 mb-4 inline-block">
             + Create Assignment
         </a>
 
-        <div class="mt-6 space-y-4">
-            @forelse ($assignments as $assignment)
-                <a href="{{ route('teacher.assignments.show', $assignment) }}"
-                   class="block p-4 rounded border bg-white dark:bg-gray-800 shadow hover:bg-gray-100 dark:hover:bg-gray-700 transition">
-                    <h2 class="text-xl font-semibold">{{ $assignment->title }}</h2>
-                    <p class="text-gray-500">{{ $assignment->description }}</p>
+        <div class="space-y-4 mt-6">
+            @foreach($assignments as $a)
+                <a href="{{ route('teacher.assignments.show', $a) }}"
+                   class="block p-4 bg-white border border-pink-300 rounded-xl shadow hover:bg-pink-100">
+                    <h2 class="text-xl font-bold text-pink-900">{{ $a->title }}</h2>
+                    <p class="text-gray-700">{{ $a->description }}</p>
                 </a>
-            @empty
-                <p class="text-gray-500 mt-4">No assignments yet.</p>
-            @endforelse
+            @endforeach
         </div>
 
     </div>

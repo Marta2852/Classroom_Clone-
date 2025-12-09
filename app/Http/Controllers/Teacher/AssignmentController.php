@@ -34,7 +34,7 @@ class AssignmentController extends Controller
 
         $path = null;
         if ($request->hasFile('file')) {
-            $path = $request->file('file')->store('assignments');
+            $path = $request->file('file')->store('assignments', 'public');
         }
 
         $classroom->assignments()->create([
