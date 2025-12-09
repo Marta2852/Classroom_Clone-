@@ -52,6 +52,49 @@ class AssignmentController extends Controller
     public function show(Assignment $assignment)
     {
         $assignment->load('classroom', 'submissions.student');
+
         return view('teacher.assignments.show', compact('assignment'));
+    }
+
+    // SHOW EDIT FORM
+    public function edit(Assignment $assignment)
+    {
+        return view('teacher.assignments.edit', compact('assignment'));
+    }
+
+    // HANDLE UPDATE
+    public function update(Request $request, Assignment $assignment)
+    {
+        $request->validate([
+            'title'       => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'file'        => 'nullable|file|max:10240', // 10MB
+        ]);
+
+        // Update fields
+        $assignment->title = $request->title;
+        $assignment->description = $request->description;
+
+        // Handle file replacement
+        if ($request->hasFile('file')) {
+
+            // Delete old file
+            if ($assignment->file_path && file_exists(public_path($assignment->file_path))) {
+                unlink(public_path($assignment->file_path));
+            }
+
+            $file = $request->file('file');
+            $path = 'uploads/assignments/';
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path($path), $fileName);
+
+            $assignment->file_path = $path . $fileName;
+        }
+
+        $assignment->save();
+
+        return redirect()
+            ->route('teacher.assignments.show', $assignment)
+            ->with('success', 'Assignment updated!');
     }
 }

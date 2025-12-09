@@ -1,37 +1,61 @@
 <x-app-layout>
-    <div class="p-6 max-w-lg mx-auto">
 
-        <h1 class="text-3xl font-bold mb-4">
-            Create Assignment for {{ $classroom->name }}
-        </h1>
+    <x-slot name="header">
+        <h2 class="page-title">➕ Create Assignment for {{ $classroom->name }}</h2>
+    </x-slot>
 
-        <form action="{{ route('teacher.assignments.store', $classroom) }}" 
-              method="POST" 
-              enctype="multipart/form-data" 
-              class="space-y-4">
+    <div class="max-w-3xl mx-auto">
 
-            @csrf
+        <div class="form-card">
 
-            <div>
-                <label class="block font-semibold">Title:</label>
-                <input type="text" name="title" required
-                       class="w-full border p-2 rounded">
-            </div>
+            <h3 class="form-title">New Assignment</h3>
 
-            <div>
-                <label class="block font-semibold">Description:</label>
-                <textarea name="description" class="w-full border p-2 rounded"></textarea>
-            </div>
+            <form action="{{ route('teacher.assignments.store', $classroom) }}" 
+                  method="POST" 
+                  enctype="multipart/form-data">
 
-            <div>
-                <label class="block font-semibold">Attach File (optional):</label>
-                <input type="file" name="file" class="w-full border p-2 rounded">
-            </div>
+                @csrf
 
-            <button class="bg-blue-600 text-white px-4 py-2 rounded">
-                Create Assignment
-            </button>
-        </form>
+                {{-- TITLE --}}
+                <div class="form-section">
+                    <label class="form-label">Title</label>
+                    <input type="text" 
+                           name="title" 
+                           placeholder="Enter assignment title"
+                           class="form-input" required>
+                </div>
+
+                {{-- DESCRIPTION --}}
+                <div class="form-section">
+                    <label class="form-label">Description</label>
+                    <textarea name="description" 
+                              rows="4"
+                              placeholder="Describe the assignment..."
+                              class="form-textarea"></textarea>
+                </div>
+
+                {{-- FILE UPLOAD --}}
+                <div class="form-section">
+                    <label class="form-label">Attach File <span class="opacity-60">(optional)</span></label>
+                    <input type="file" name="file" class="form-input">
+                </div>
+
+                {{-- BUTTONS --}}
+                <div class="form-buttons">
+                    <button type="submit" class="btn-primary px-6 py-2">
+                        ➕ Create Assignment
+                    </button>
+
+                    <a href="{{ route('teacher.assignments.index', $classroom) }}" 
+                       class="btn-secondary px-6 py-2">
+                        ❌ Cancel
+                    </a>
+                </div>
+
+            </form>
+
+        </div>
 
     </div>
+
 </x-app-layout>

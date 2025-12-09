@@ -93,17 +93,25 @@ Route::middleware(['auth', 'role:teacher'])
         Route::post('/classes', [ClassroomController::class, 'store'])->name('classes.store');
 
         // ---------- ASSIGNMENTS ----------
-        Route::get('/classes/{classroom}/assignments', [AssignmentController::class, 'index'])
-            ->name('assignments.index');
+Route::get('/classes/{classroom}/assignments', [AssignmentController::class, 'index'])
+    ->name('assignments.index');
 
-        Route::get('/classes/{classroom}/assignments/create', [AssignmentController::class, 'create'])
-            ->name('assignments.create');
+Route::get('/classes/{classroom}/assignments/create', [AssignmentController::class, 'create'])
+    ->name('assignments.create');
 
-        Route::post('/classes/{classroom}/assignments', [AssignmentController::class, 'store'])
-            ->name('assignments.store');
+Route::post('/classes/{classroom}/assignments', [AssignmentController::class, 'store'])
+    ->name('assignments.store');
 
-        Route::get('/assignments/{assignment}', [AssignmentController::class, 'show'])
-            ->name('assignments.show');
+Route::get('/assignments/{assignment}', [AssignmentController::class, 'show'])
+    ->name('assignments.show');
+
+// Edit Assignment
+Route::get('/assignments/{assignment}/edit', [AssignmentController::class, 'edit'])
+    ->name('assignments.edit');
+
+Route::put('/assignments/{assignment}', [AssignmentController::class, 'update'])
+    ->name('assignments.update');
+
 
         // ---------- GRADING SUBMISSIONS ----------
         Route::post('/submissions/{submission}/grade', [SubmissionController::class, 'grade'])
@@ -112,6 +120,16 @@ Route::middleware(['auth', 'role:teacher'])
         // ---------- GRADING PANEL ----------
         Route::get('/grading', [SubmissionController::class, 'grading'])
             ->name('grading.index');
+
+            Route::get('/teacher/assignments/{assignment}/edit', 
+    [AssignmentController::class, 'edit']
+)->name('teacher.assignments.edit');
+
+Route::post('/teacher/assignments/{assignment}/edit', 
+    [AssignmentController::class, 'update']
+)->name('teacher.assignments.update');
+
+        
     });
 
 

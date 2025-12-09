@@ -1,24 +1,53 @@
 <x-app-layout>
-    <div class="p-6 max-w-lg mx-auto">
 
-        <h1 class="text-2xl font-bold mb-4">Create New Class</h1>
+    <x-slot name="header">
+        <h2 class="page-title">➕ Create New Class</h2>
+    </x-slot>
 
-        <form action="{{ route('teacher.classes.store') }}" method="POST">
-            @csrf
+    <div class="max-w-3xl mx-auto">
 
-            <label class="block mb-3">
-                Class Name:
-                <input type="text" name="name" class="w-full border p-2 rounded" required>
-            </label>
+        <div class="form-card">
 
-            <label class="block mb-3">
-                Description:
-                <textarea name="description" class="w-full border p-2 rounded"></textarea>
-            </label>
+            <h3 class="form-title">New Class</h3>
 
-            <button class="bg-blue-600 text-white px-4 py-2 rounded">
-                Create Class
-            </button>
-        </form>
+            <form action="{{ route('teacher.classes.store') }}" method="POST">
+                @csrf
+
+                {{-- CLASS NAME --}}
+                <div class="form-section">
+                    <label class="form-label">Class Name</label>
+                    <input type="text" 
+                           name="name" 
+                           placeholder="Enter class name"
+                           class="form-input" 
+                           required>
+                </div>
+
+                {{-- DESCRIPTION --}}
+                <div class="form-section">
+                    <label class="form-label">Description</label>
+                    <textarea name="description" 
+                              rows="3"
+                              placeholder="Describe the class..."
+                              class="form-textarea"></textarea>
+                </div>
+
+                {{-- BUTTONS --}}
+                <div class="form-buttons">
+                    <button type="submit" class="btn-primary px-6 py-2">
+                        ➕ Create Class
+                    </button>
+
+                    <a href="{{ route('teacher.classes.index') }}" 
+                       class="btn-secondary px-6 py-2">
+                        ❌ Cancel
+                    </a>
+                </div>
+
+            </form>
+
+        </div>
+
     </div>
+
 </x-app-layout>

@@ -1,23 +1,64 @@
 <x-app-layout>
-    <div class="max-w-5xl mx-auto p-6">
+    <x-slot name="header">
+        <h2 class="page-title">Assignments for {{ $classroom->name }}</h2>
+    </x-slot>
 
-        <h1 class="text-3xl font-bold text-pink-900 mb-6">
-            Assignments for {{ $classroom->name }}
-        </h1>
+    <!-- Centered container like dashboard -->
+    <div class="max-w-4xl mx-auto">
 
-        <a href="{{ route('teacher.assignments.create', $classroom) }}"
-           class="bg-pink-700 text-white px-4 py-2 rounded hover:bg-pink-800 mb-4 inline-block">
-            + Create Assignment
-        </a>
+        <!-- Create Assignment Button -->
+        <div class="flex justify-end mb-6">
+            <a href="{{ route('teacher.assignments.create', $classroom) }}"
+               class="btn-primary inline-flex items-center">
+                <span class="mr-2">➕</span>Create Assignment
+            </a>
+        </div>
 
-        <div class="space-y-4 mt-6">
-            @foreach($assignments as $a)
-                <a href="{{ route('teacher.assignments.show', $a) }}"
-                   class="block p-4 bg-white border border-pink-300 rounded-xl shadow hover:bg-pink-100">
-                    <h2 class="text-xl font-bold text-pink-900">{{ $a->title }}</h2>
-                    <p class="text-gray-700">{{ $a->description }}</p>
-                </a>
-            @endforeach
+        <!-- Assignment List -->
+        <div class="space-y-6">
+
+            @forelse($assignments as $assignment)
+                <div class="card">
+
+                    <h2 class="card-title">{{ $assignment->title }}</h2>
+
+                    <p class="card-description">
+                        {{ $assignment->description ?? 'No description provided.' }}
+                    </p>
+
+                    <div class="mt-4 space-y-3 text-sm text-gray-700">
+
+                        <div class="assignment-meta">
+
+    <div>
+        <span class="text-lg">📅</span>
+        <span>Created {{ $assignment->created_at->diffForHumans() }}</span>
+    </div>
+
+    <div>
+        <span class="text-lg">📥</span>
+        <span>{{ $assignment->submissions->count() }} Submissions</span>
+    </div>
+
+</div>
+
+
+                    </div>
+
+                    <div class="mt-4">
+                        <a href="{{ route('teacher.assignments.show', $assignment) }}"
+                           class="btn-secondary">
+                            Open Assignment
+                        </a>
+                    </div>
+
+                </div>
+            @empty
+                <div class="card">
+                    <p class="empty">No assignments yet.</p>
+                </div>
+            @endforelse
+
         </div>
 
     </div>

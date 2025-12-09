@@ -1,51 +1,62 @@
 <x-app-layout>
-    <div class="max-w-5xl mx-auto p-6">
 
-        <h1 class="text-3xl font-bold text-pink-900 mb-6">
-            Grading Panel
-        </h1>
+    <x-slot name="header">
+        <h2 class="page-title">Grading Panel</h2>
+    </x-slot>
 
+    <div class="max-w-5xl mx-auto">
+
+        {{-- Empty Message --}}
         @if($submissions->isEmpty())
-            <p class="text-gray-700">No submissions to grade right now.</p>
+            <p class="empty mt-4">No submissions to grade right now.</p>
         @endif
 
-        @foreach($submissions as $sub)
-            <div class="p-4 mb-4 bg-white border border-pink-300 rounded-xl shadow">
+        <div class="space-y-6 mt-6">
+            @foreach($submissions as $sub)
+                <div class="card hover-grow">
 
-                <h2 class="text-xl font-semibold text-pink-900">
-                    {{ $sub->assignment->title }}
-                </h2>
+                    {{-- Title --}}
+                    <h3 class="card-title">
+                        {{ $sub->assignment->title }}
+                    </h3>
 
-                <p class="text-gray-700">
-                    Student: <strong>{{ $sub->student->name }}</strong>
-                </p>
+                    {{-- Student + Class --}}
+                    <p class="card-description mt-2">
+                        👤 <strong>{{ $sub->student->name }}</strong><br>
+                        🏫 Class: <strong>{{ $sub->assignment->classroom->name }}</strong>
+                    </p>
 
-                <p class="text-gray-700">
-                    Class: <strong>{{ $sub->assignment->classroom->name }}</strong>
-                </p>
+                    {{-- ⭐⭐ DOWNLOAD + GRADE IN ONE ROW ⭐⭐ --}}
+                    <div class="submission-actions">
 
-                @if($sub->file_path)
-                    <a href="{{ asset('storage/' . $sub->file_path) }}"
-                       class="text-pink-700 underline block mt-2">
-                        Download Submission
-                    </a>
-                @endif
+                        {{-- Download Button --}}
+                        <a href="{{ asset('storage/' . $sub->file_path) }}" 
+                           class="btn-secondary">
+                            ⬇️ Download Submission
+                        </a>
 
-                <form action="{{ route('teacher.submissions.grade', $sub) }}"
-                      method="POST" class="mt-3 flex items-center gap-2">
-                    @csrf
+                        {{-- Grade Form --}}
+                        <form action="{{ route('teacher.submissions.grade', $sub) }}"
+                              method="POST" class="flex items-center gap-3">
+                            @csrf
 
-                    <input type="number" name="grade" min="0" max="100"
-                           class="border-pink-300 rounded w-20"
-                           placeholder="Grade">
+                            <select name="grade" class="grade-select">
+                                @for ($i = 1; $i <= 10; $i++)
+                                    <option value="{{ $i }}">{{ $i }}</option>
+                                @endfor
+                            </select>
 
-                    <button class="bg-pink-700 text-white px-3 py-1 rounded hover:bg-pink-800">
-                        Save Grade
-                    </button>
-                </form>
+                            <button type="submit" class="btn-primary">
+                                💾 Save Grade
+                            </button>
+                        </form>
 
-            </div>
-        @endforeach
+                    </div>
+
+                </div>
+            @endforeach
+        </div>
 
     </div>
+
 </x-app-layout>
