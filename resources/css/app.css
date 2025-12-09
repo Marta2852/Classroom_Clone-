@@ -686,3 +686,127 @@ input[type="file"]:focus {
 .small-btn:hover {
     background: var(--color-border);
 }
+
+/* =====================================================
+   ADMIN TABLE FIX — FORCED ROWS + BORDERS
+===================================================== */
+/* =====================================================
+   HARD FIX — FORCE TABLE BEHAVIOR BACK
+===================================================== */
+
+table, thead, tbody, tr, th, td {
+    display: revert !important;
+}
+
+table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+}
+
+tr {
+    border-bottom: 2px solid var(--color-border) !important;
+}
+
+td, th {
+    padding: 12px 16px !important;
+    border-right: 1px solid var(--color-border) !important;
+}
+
+td:last-child, th:last-child {
+    border-right: none !important;
+}
+
+tbody tr:nth-child(even) {
+    background: rgba(255,255,255,0.5) !important;
+}
+
+tbody tr:nth-child(odd) {
+    background: rgba(255,240,247,0.7) !important;
+}
+
+/* ACTION BUTTON FIX */
+.admin-actions {
+    display: flex !important;
+    gap: 10px !important;
+    align-items: center !important;
+}
+
+/* ===========================================
+   BEAUTIFUL ADMIN TABLE STYLING
+   =========================================== */
+
+.admin-table {
+    width: 100%;
+    border-collapse: separate !important;
+    border-spacing: 0 10px !important; /* gaps between rows */
+}
+
+.admin-table thead th {
+    background: var(--color-surface);
+    color: var(--color-accent);
+    font-weight: 700;
+    padding: 16px;
+    text-align: left;
+    border-bottom: 3px solid var(--color-border);
+    font-size: 1rem;
+}
+
+.admin-table tbody tr {
+    background: var(--color-white);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.admin-table tbody tr:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.admin-table td {
+    padding: 18px;
+    font-size: 0.95rem;
+    color: var(--color-text);
+    border-right: 1px solid rgba(0,0,0,0.05);
+}
+
+.admin-table td:last-child {
+    border-right: none;
+}
+
+/* Action buttons */
+.admin-btn-edit,
+.admin-btn-delete {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.admin-btn-edit {
+    background: var(--color-accent);
+    color: var(--color-white);
+}
+
+.admin-btn-edit:hover {
+    background: var(--color-border);
+}
+
+.admin-btn-delete {
+    background: #b53b52;
+    color: white;
+}
+
+.admin-btn-delete:hover {
+    background: #8e2a3c;
+}
+
+/* Fix actions cell */
+.admin-actions {
+    display: flex;
+    gap: 10px;
+}

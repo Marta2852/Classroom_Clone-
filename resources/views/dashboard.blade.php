@@ -177,11 +177,48 @@
              ⚙️ ADMIN DASHBOARD
         ============================ --}}
         @if(Auth::user()->role === 'admin')
-            <div class="content-card glass fade-in">
-                <h3 class="card-title">⚙️ Admin Panel</h3>
-                <p>You can manage everything using the navigation bar.</p>
-            </div>
-        @endif
+
+    <h2 class="section-title centered-title fade-in">
+        ⚙️ Admin Overview
+    </h2>
+
+    <!-- GLOBAL STATISTICS -->
+    <div class="stats-wrapper fade-in-delay">
+
+        <div class="stat-card glass">
+            <p class="stat-label">Total Users</p>
+            <h3 class="stat-value">{{ $totalUsers }}</h3>
+        </div>
+
+        <div class="stat-card glass">
+            <p class="stat-label">Students</p>
+            <h3 class="stat-value">{{ $totalStudents }}</h3>
+        </div>
+
+        <div class="stat-card glass">
+            <p class="stat-label">Teachers</p>
+            <h3 class="stat-value">{{ $totalTeachers }}</h3>
+        </div>
+
+        <div class="stat-card glass">
+            <p class="stat-label">Classes</p>
+            <h3 class="stat-value">{{ $totalClasses }}</h3>
+        </div>
+
+        <div class="stat-card glass">
+            <p class="stat-label">Assignments</p>
+            <h3 class="stat-value">{{ $totalAssignments }}</h3>
+        </div>
+
+        <div class="stat-card glass">
+            <p class="stat-label">Submissions</p>
+            <h3 class="stat-value">{{ $totalSubmissions }}</h3>
+        </div>
+
+    </div>
+
+@endif
+
 
     </div>
 </x-app-layout>
