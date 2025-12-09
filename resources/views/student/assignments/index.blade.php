@@ -1,18 +1,36 @@
 <x-app-layout>
 
-    <div class="p-6">
+    <div class="dashboard-container fade-in">
 
-        <h1 class="text-2xl font-bold mb-4">
-            Assignments for {{ $classroom->name }}
+        <h1 class="page-title centered-title mb-6">
+            📝 Assignments — {{ $classroom->name }}
         </h1>
 
-        @foreach ($assignments as $assignment)
-            <a href="{{ route('student.assignments.show', $assignment) }}"
-               class="block bg-slate-800 text-white p-4 rounded mb-3 hover:bg-slate-700 transition">
-                <h2 class="text-lg font-semibold">{{ $assignment->title }}</h2>
-                <p class="text-gray-300">{{ $assignment->description }}</p>
+        @forelse ($assignments as $assignment)
+            <a href="{{ route('student.assignments.show', $assignment) }}" class="assignment-list-card hover-grow">
+
+                <div class="assignment-list-header">
+                    <h2 class="assignment-list-title">{{ $assignment->title }}</h2>
+
+                    <p class="assignment-list-desc">
+                        {{ $assignment->description ?? 'No description provided.' }}
+                    </p>
+                </div>
+
+                <div class="assignment-list-footer">
+                    <span class="assignment-date">
+                        📅 Posted: {{ $assignment->created_at->format('M d, Y') }}
+                    </span>
+
+                    <span class="view-btn small-btn">
+                        View →
+                    </span>
+                </div>
+
             </a>
-        @endforeach
+        @empty
+            <p class="empty mt-6">No assignments yet ✨</p>
+        @endforelse
 
     </div>
 

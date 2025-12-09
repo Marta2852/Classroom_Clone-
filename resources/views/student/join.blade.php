@@ -1,18 +1,30 @@
 <x-app-layout>
-    <div class="max-w-md mx-auto p-6">
 
-        <h1 class="text-2xl font-bold mb-4">Join a Class</h1>
+    <div class="max-w-md mx-auto p-16 text-center">
 
-        <form action="{{ route('student.join.submit') }}" method="POST">
+        <h1 class="text-3xl font-bold mb-8" style="color: var(--color-accent);">
+            Join a Class
+        </h1>
+
+        <form action="{{ route('student.join.submit') }}" method="POST" class="space-y-10">
             @csrf
 
-            <label class="block font-semibold mb-2">Enter Join Code:</label>
-            <input type="text" name="code" class="border p-2 rounded w-full">
+            <input 
+                type="text" 
+                name="code"
+                placeholder="Enter Join Code"
+                class="w-full text-center text-xl py-3 bg-transparent border-b-2 focus:outline-none"
+                style="border-color: var(--color-border); color: var(--color-text);"
+                required
+            >
 
-            <button class="mt-4 bg-blue-600 text-white px-4 py-2 rounded">
-                Join
+            <button 
+                class="btn-primary w-full py-3 text-lg font-semibold"
+            >
+                Join Class
             </button>
         </form>
 
     </div>
+
 </x-app-layout>

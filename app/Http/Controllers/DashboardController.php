@@ -14,7 +14,9 @@ class DashboardController extends Controller
     {
         $user = auth()->user();
 
-        // Default values
+        // ------------------------------------------------------------
+        // DEFAULT VALUES (Prevents Blade errors)
+        // ------------------------------------------------------------
         $classCount = 0;
         $assignmentCount = 0;
         $studentCount = 0;
@@ -22,62 +24,103 @@ class DashboardController extends Controller
         $recentAssignments = collect();
         $needsGrading = collect();
 
-        // ============================
+        $studentClasses = collect();
+        $studentClassesCount = 0;
+        $pendingAssignments = collect();
+        $pendingAssignmentsCount = 0;
+        $completedAssignmentsCount = 0;
+        $studentSubmissionCount = 0;
+
+        // ------------------------------------------------------------
         // TEACHER DASHBOARD
-        // ============================
+        // ------------------------------------------------------------
         if ($user->role === 'teacher') {
 
-            // Get teacher classes
+            // All classes teacher owns
             $classes = Classroom::where('teacher_id', $user->id)->get();
             $classIds = $classes->pluck('id');
-
-            // --- Basic stats ---
             $classCount = $classIds->count();
 
-            // Get assignment IDs only for teacher's classes
-            $assignmentIds = Assignment::whereIn('classroom_id', $classIds)->pluck('id');
+            // Assignments teacher created
+            $assignments = Assignment::whereIn('classroom_id', $classIds)->get();
+            $assignmentIds = $assignments->pluck('id');
             $assignmentCount = $assignmentIds->count();
 
-            // Students enrolled
+            // Students in teacher's classes (PIVOT)
             $studentCount = DB::table('classroom_student')
                 ->whereIn('classroom_id', $classIds)
                 ->count();
 
-            // Total submissions
+            // How many submissions teacher received
             $submissionCount = Submission::whereIn('assignment_id', $assignmentIds)->count();
 
+            // Recent assignments
+            $recentAssignments = Assignment::whereIn('classroom_id', $classIds)
+                ->latest()
+                ->take(5)
+                ->get();
 
-            // --- Protect queries when no classes exist ---
-            if ($classIds->isNotEmpty()) {
-
-                // Recent assignments (only teacher's)
-                $recentAssignments = Assignment::whereIn('classroom_id', $classIds)
-                    ->orderBy('created_at', 'desc')
-                    ->take(5)
-                    ->get();
-
-                // Needs grading (only teacher's)
-                $needsGrading = Submission::whereIn('assignment_id', $assignmentIds)
-                    ->whereNull('grade')
-                    ->with('assignment', 'student')
-                    ->take(5)
-                    ->get();
-
-            } else {
-                // No classes → no assignments → no submissions
-                $recentAssignments = collect();
-                $needsGrading = collect();
-            }
+            // Submissions that still need grading
+            $needsGrading = Submission::whereIn('assignment_id', $assignmentIds)
+                ->whereNull('grade')
+                ->with('assignment', 'student')
+                ->take(5)
+                ->get();
         }
 
+        // ------------------------------------------------------------
+        // STUDENT DASHBOARD
+        // ------------------------------------------------------------
+        if ($user->role === 'student') {
 
+            // What classes the student is in
+            $studentClassIds = DB::table('classroom_student')
+                ->where('student_id', $user->id)
+                ->pluck('classroom_id');
+
+            $studentClasses = Classroom::whereIn('id', $studentClassIds)
+                ->with('teacher')
+                ->get();
+
+            $studentClassesCount = $studentClasses->count();
+
+            // All assignments from those classes
+            $assignments = Assignment::whereIn('classroom_id', $studentClassIds)->get();
+
+            // Student’s submissions
+            $studentSubmissionCount = Submission::where('student_id', $user->id)->count();
+
+            $completedAssignmentsCount = $studentSubmissionCount;
+
+            // Pending assignments (no submission made)
+            $pendingAssignments = $assignments->filter(function ($assignment) use ($user) {
+                return !Submission::where('assignment_id', $assignment->id)
+                    ->where('student_id', $user->id)
+                    ->exists();
+            });
+
+            $pendingAssignmentsCount = $pendingAssignments->count();
+        }
+
+        // ------------------------------------------------------------
+        // RETURN ONE VIEW
+        // ------------------------------------------------------------
         return view('dashboard', compact(
+            // Teacher vars
             'classCount',
             'assignmentCount',
             'studentCount',
             'submissionCount',
             'recentAssignments',
-            'needsGrading'
+            'needsGrading',
+
+            // Student vars
+            'studentClasses',
+            'studentClassesCount',
+            'pendingAssignments',
+            'pendingAssignmentsCount',
+            'completedAssignmentsCount',
+            'studentSubmissionCount'
         ));
     }
 }

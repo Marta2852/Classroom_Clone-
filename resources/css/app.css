@@ -592,3 +592,97 @@ input[type="file"]:focus {
 .submission-actions form select {
     margin-right: 4px;
 }
+
+/* Student Class Card */
+.student-class-card {
+    background: var(--color-surface);
+    border: 2px solid var(--color-border);
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 22px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.student-class-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+}
+
+.student-class-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--color-accent);
+    margin-bottom: 6px;
+}
+
+.student-class-desc {
+    font-size: 0.95rem;
+    opacity: 0.85;
+    margin-bottom: 12px;
+}
+
+.student-class-btn {
+    margin-top: 10px;
+}
+
+/* Assignment List Card */
+.assignment-list-card {
+    display: block;
+    background: var(--color-surface);
+    border: 2px solid var(--color-border);
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 18px;
+    color: var(--color-text);
+    text-decoration: none;
+    transition: .25s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.assignment-list-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 18px rgba(0,0,0,0.15);
+}
+
+/* Header text */
+.assignment-list-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-accent);
+    margin-bottom: 6px;
+}
+
+.assignment-list-desc {
+    font-size: 0.95rem;
+    opacity: 0.85;
+    margin-bottom: 14px;
+}
+
+/* Footer row */
+.assignment-list-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+}
+
+.assignment-date {
+    opacity: 0.7;
+    font-size: 0.85rem;
+}
+
+/* Small button on the right */
+.small-btn {
+    background: var(--color-accent);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: .85rem;
+    font-weight: 600;
+    transition: .2s;
+}
+
+.small-btn:hover {
+    background: var(--color-border);
+}

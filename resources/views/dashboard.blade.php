@@ -87,16 +87,95 @@
 
 
 
-        {{-- 🌸 STUDENT DASHBOARD --}}
+
+
+        {{-- ===========================
+             🌸 STUDENT DASHBOARD
+        ============================ --}}
         @if(Auth::user()->role === 'student')
-            <div class="content-card glass fade-in">
-                <h3 class="card-title">🎓 Welcome, Student!</h3>
-                <p>Your classes are available from the navigation bar!</p>
+
+            <h2 class="section-title centered-title fade-in">
+                🌸 Student Dashboard 🌸
+            </h2>
+
+            {{-- ⭐ STUDENT STATS --}}
+<div class="stats-wrapper fade-in-delay">
+    <div class="stat-card glass">
+        <p class="stat-label">My Classes</p>
+        <h3 class="stat-value">{{ $studentClasses->count() }}</h3>
+    </div>
+
+    <div class="stat-card glass">
+        <p class="stat-label">Pending Assignments</p>
+        <h3 class="stat-value">{{ $pendingAssignments->count() }}</h3>
+    </div>
+
+    <div class="stat-card glass">
+        <p class="stat-label">Completed</p>
+        <h3 class="stat-value">{{ $completedAssignmentsCount }}</h3>
+    </div>
+
+    <div class="stat-card glass">
+        <p class="stat-label">Total Submissions</p>
+        <h3 class="stat-value">{{ $studentSubmissionCount }}</h3>
+    </div>
+</div>
+
+
+
+            {{-- 📚 MY CLASSES --}}
+            <div class="content-card glass fade-in-delay">
+                <h3 class="card-title">📚 My Classes</h3>
+
+                @forelse($studentClasses as $class)
+                    <div class="list-row">
+                        <div>
+                            <strong>{{ $class->name }}</strong>
+                            <p class="list-date">
+                                Teacher: {{ $class->teacher->name }}
+                            </p>
+                        </div>
+
+                        <a href="{{ route('student.assignments.index', $class) }}" class="view-btn">
+                            View
+                        </a>
+                    </div>
+                @empty
+                    <p class="empty">You are not enrolled in any classes yet 🌼</p>
+                @endforelse
             </div>
+
+
+            {{-- 📝 PENDING ASSIGNMENTS --}}
+            <div class="content-card glass fade-in-delay-2">
+                <h3 class="card-title">📝 Pending Assignments</h3>
+
+                @forelse($pendingAssignments as $assignment)
+                    <div class="list-row">
+                        <div>
+                            <strong>{{ $assignment->title }}</strong>
+                            <p class="list-date">
+                                Class: {{ $assignment->classroom->name }}
+                            </p>
+                        </div>
+
+                        <a href="{{ route('student.assignments.show', $assignment) }}" class="view-btn">
+                            Open
+                        </a>
+                    </div>
+                @empty
+                    <p class="empty">🎉 No assignments left to do!</p>
+                @endforelse
+            </div>
+
         @endif
 
 
-        {{-- ⚙️ ADMIN DASHBOARD --}}
+
+
+        {{-- ===========================
+             ⚙️ ADMIN DASHBOARD
+        ============================ --}}
         @if(Auth::user()->role === 'admin')
             <div class="content-card glass fade-in">
                 <h3 class="card-title">⚙️ Admin Panel</h3>

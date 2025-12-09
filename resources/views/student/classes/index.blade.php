@@ -1,17 +1,30 @@
 <x-app-layout>
-    <div class="pink-theme p-6">
-        <h1 class="page-title">My Classes</h1>
+    <div class="dashboard-container fade-in">
 
-        @foreach($classes as $class)
-            <div class="card mt-6">
-                <h2 class="card-title">{{ $class->name }}</h2>
-                <p class="card-description">{{ $class->description }}</p>
+        <h1 class="page-title centered-title mb-6">📚 My Classes</h1>
 
-                <a class="btn-secondary mt-4 inline-block"
-                   href="{{ route('student.assignments.index', $class->id) }}">
-                    View Assignments
-                </a>
+        @forelse($classes as $class)
+            <div class="student-class-card hover-grow">
+
+                {{-- Class Header --}}
+                <div class="student-class-header">
+                    <h2 class="student-class-title">{{ $class->name }}</h2>
+
+                    <p class="student-class-desc">
+                        {{ $class->description ?? 'No description available.' }}
+                    </p>
+                </div>
+
+                {{-- Button --}}
+                <div class="student-class-btn">
+                    <a href="{{ route('student.assignments.index', $class->id) }}" class="btn-primary">
+                        📘 View Assignments
+                    </a>
+                </div>
             </div>
-        @endforeach
+        @empty
+            <p class="empty mt-6">You are not enrolled in any classes yet 🌸</p>
+        @endforelse
+
     </div>
 </x-app-layout>

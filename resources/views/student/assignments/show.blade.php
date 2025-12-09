@@ -1,54 +1,44 @@
 <x-app-layout>
 
-    <div class="max-w-3xl mx-auto p-6 text-white">
+    <div class="max-w-2xl mx-auto p-6">
 
-        <!-- Assignment Header -->
+        {{-- CLEAN HEADER (NO BOX) --}}
         <h1 class="text-3xl font-bold mb-2">{{ $assignment->title }}</h1>
-        <p class="text-gray-300 mb-6">{{ $assignment->description }}</p>
+        <p class="opacity-80 mb-4">{{ $assignment->description }}</p>
 
-        <!-- Teacher File -->
         @if($assignment->file_path)
-            <div class="mb-6 p-4 bg-slate-800 rounded">
-                <p class="font-semibold text-gray-200 mb-2">Attached File:</p>
-                <a href="{{ Storage::url($assignment->file_path) }}"
-                   class="text-blue-400 underline"
-                   download>
-                    Download Assignment File
-                </a>
-            </div>
+            <a href="{{ Storage::url($assignment->file_path) }}"
+               class="btn-secondary inline-flex items-center mb-6"
+               download>
+                ⬇️ Download Assignment File
+            </a>
         @endif
 
-        <!-- Submit Box -->
-        <div class="bg-slate-900 p-6 rounded shadow">
 
-            <h2 class="text-xl font-bold mb-4">Submit Your Work</h2>
+        {{-- Submit Box --}}
+        <h2 class="section-title mb-3">📤 Submit Your Work</h2>
 
+        <div class="card hover-grow mb-10" style="padding: 22px;">
             <form action="{{ route('student.assignments.submit', $assignment) }}"
                   method="POST"
                   enctype="multipart/form-data">
 
                 @csrf
 
-                <label class="block mb-2 font-semibold">Upload File:</label>
-                <input type="file" name="file"
-                       class="w-full border p-2 rounded bg-slate-800 text-white"
-                       required>
+                <label class="form-label mb-1">Upload File</label>
+                <input type="file" name="file" class="form-input mb-4" required>
 
-                <label class="block mt-4 mb-2 font-semibold">Comment (optional):</label>
-                <textarea name="comment"
-                          class="w-full border p-2 rounded bg-slate-800 text-white"
-                          rows="3"></textarea>
+                <label class="form-label mb-1">Comment (optional)</label>
+                <textarea name="comment" rows="3" class="form-textarea mb-4"></textarea>
 
-                <button class="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
-                    Submit Assignment
+                <button class="btn-primary px-5 py-2">
+                    📤 Submit Assignment
                 </button>
-
             </form>
-
         </div>
 
 
-        <!-- Previous Submissions (optional) -->
+        {{-- Past Submissions --}}
         @php
             $mySubmissions = $assignment->submissions()
                 ->where('student_id', auth()->id())
@@ -57,38 +47,43 @@
         @endphp
 
         @if($mySubmissions->count() > 0)
-            <div class="mt-10">
-                <h2 class="text-xl font-bold mb-4">Your Submissions</h2>
+            
+            <h2 class="section-title mb-3">📚 Your Submissions</h2>
+
+            <div class="space-y-4">
 
                 @foreach($mySubmissions as $sub)
-                    <div class="bg-slate-800 p-4 rounded mb-3">
-                        <p class="text-gray-300">
-                            Submitted on: {{ $sub->created_at->format('Y-m-d H:i') }}
+                    <div class="card hover-grow p-4">
+
+                        <p class="opacity-75 text-sm mb-2">
+                            Submitted on <strong>{{ $sub->created_at->format('M d, Y H:i') }}</strong>
                         </p>
 
                         <a href="{{ Storage::url($sub->file_path) }}"
-                           class="text-blue-400 underline block mt-2"
+                           class="btn-secondary inline-flex items-center mb-2"
                            download>
-                            Download Submitted File
+                            ⬇️ Download Submitted File
                         </a>
 
                         @if($sub->comment)
-                            <p class="text-gray-400 mt-2 italic">
-                                Comment: {{ $sub->comment }}
+                            <p class="italic opacity-75 mb-1">
+                                💬 {{ $sub->comment }}
                             </p>
                         @endif
 
                         @if($sub->grade !== null)
-                            <p class="mt-2 font-semibold text-green-400">
-                                Grade: {{ $sub->grade }} / 100
+                            <p class="font-bold" style="color: green;">
+                                ⭐ Grade: {{ $sub->grade }} / 100
                             </p>
                         @else
-                            <p class="mt-2 text-gray-400">Not graded yet</p>
+                            <p class="opacity-70">Not graded yet</p>
                         @endif
+
                     </div>
                 @endforeach
 
             </div>
+
         @endif
 
     </div>
