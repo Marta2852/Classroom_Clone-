@@ -33,10 +33,17 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
 // =========================
 
 Route::middleware('auth')->group(function () {
+
+    // Profile edit (Laravel Breeze default)
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Avatar routes
+    Route::post('/profile/avatar', [ProfileController::class, 'uploadAvatar'])->name('profile.avatar.upload');
+    Route::delete('/profile/avatar', [ProfileController::class, 'deleteAvatar'])->name('profile.avatar.delete');
 });
+
 
 
 // =========================

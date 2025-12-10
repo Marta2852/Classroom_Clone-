@@ -73,7 +73,7 @@
 
                         @if($sub->grade !== null)
                             <p class="font-bold" style="color: green;">
-                                ⭐ Grade: {{ $sub->grade }} / 100
+                                ⭐ Grade: {{ $sub->grade }} / 10
                             </p>
                         @else
                             <p class="opacity-70">Not graded yet</p>

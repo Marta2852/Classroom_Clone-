@@ -11,14 +11,54 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
-    <!-- Scripts / CSS -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+   
+
+
+
+    <!-- Styles -->
+    @vite(['resources/css/app.css'])
+    
+    <!-- Scripts -->
+    @vite(['resources/js/app.js'])
+
+    <style>
+    .nav-avatar {
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
+        min-height: 36px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid white;
+        flex-shrink: 0;
+        display: block;
+    }
+
+    .nav-user {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 12px;
+        background: var(--color-accent);
+        border-radius: 8px;
+        max-height: 40px;
+        white-space: nowrap;
+    }
+
+    .nav-username {
+        font-size: 15px;
+        color: white;
+        font-weight: 600;
+    }
+</style>
+
 </head>
 
 <body class="font-sans antialiased">
 
     <!-- Entire page background now uses Queen Pink -->
-    <div class="min-h-screen" style="background-color: var(--pink-light);">
+    <div class="min-h-screen bg-[var(--color-bg)]">
+
 
         {{-- Navigation Bar --}}
         @include('layouts.navigation')

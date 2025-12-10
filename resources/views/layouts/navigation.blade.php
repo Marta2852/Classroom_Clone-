@@ -1,8 +1,19 @@
 <nav class="main-nav">
     <div class="nav-container">
 
-        {{-- LEFT SIDE LINKS --}}
+        <!-- LEFT SIDE: avatar + name + links -->
         <div class="nav-left">
+
+            <!-- Avatar + Name -->
+            <a href="{{ route('profile.edit') }}" class="nav-user">
+    <img src="{{ asset('storage/avatars/' . Auth::user()->avatar) }}" class="nav-avatar">
+    <span class="nav-username">{{ Auth::user()->name }}</span>
+</a>
+
+
+
+
+            <!-- Normal nav links -->
             <a href="{{ route('dashboard') }}">Dashboard</a>
 
             @if(Auth::user()->role === 'teacher')
@@ -19,16 +30,12 @@
                 <a href="{{ route('admin.users.index') }}">Users</a>
                 <a href="{{ route('admin.logs.index') }}">Logs</a>
             @endif
+
         </div>
 
-        {{-- RIGHT SIDE --}}
+        <!-- RIGHT SIDE -->
         <div class="nav-right">
-
-            {{-- DARK MODE SWITCH --}}
             <button id="themeToggle" class="theme-toggle">🌙</button>
-
-            <span class="nav-user">{{ Auth::user()->name }}</span>
-
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button class="logout-btn">Logout</button>

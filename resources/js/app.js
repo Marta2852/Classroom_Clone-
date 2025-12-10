@@ -10,13 +10,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const toggle = document.getElementById("themeToggle");
 
-    toggle.addEventListener("click", () => {
-        document.documentElement.classList.toggle("dark-mode");
+    const savedTheme = localStorage.getItem("theme");
 
-        toggle.textContent =
-            document.documentElement.classList.contains("dark-mode")
-                ? "☀️"
-                : "🌙";
+    if (savedTheme === "dark") {
+        document.documentElement.classList.add("dark-mode");
+    }
+
+    toggle.textContent =
+        document.documentElement.classList.contains("dark-mode")
+            ? "☀️"
+            : "🌙";
+
+    toggle.addEventListener("click", () => {
+        const isDark = document.documentElement.classList.toggle("dark-mode");
+        localStorage.setItem("theme", isDark ? "dark" : "light");
+        toggle.textContent = isDark ? "☀️" : "🌙";
     });
 
 });

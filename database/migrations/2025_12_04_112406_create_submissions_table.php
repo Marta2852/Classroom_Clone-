@@ -11,6 +11,11 @@ return new class extends Migration
      */
     public function up()
 {
+    // Skip if the table already exists
+    if (Schema::hasTable('submissions')) {
+        return;
+    }
+
     Schema::create('submissions', function (Blueprint $table) {
         $table->id();
 
@@ -26,6 +31,7 @@ return new class extends Migration
 }
 
 
+
     /**
      * Reverse the migrations.
      */
@@ -33,4 +39,6 @@ return new class extends Migration
     {
         Schema::dropIfExists('submissions');
     }
+
+    
 };

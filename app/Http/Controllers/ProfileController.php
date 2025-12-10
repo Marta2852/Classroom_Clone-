@@ -22,7 +22,7 @@ class ProfileController extends Controller
     }
 
     /**
-     * Update the user's profile information.
+     * Update the user's basic profile information.
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
@@ -36,6 +36,52 @@ class ProfileController extends Controller
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
+
+    /**
+     * Upload or change user avatar.
+     */
+    public function uploadAvatar(Request $request): RedirectResponse
+{
+    $request->validate([
+        'avatar' => 'required|image|max:2048'
+    ]);
+
+    $user = Auth::user();
+
+    // Delete old avatar from storage
+    if ($user->avatar && \Storage::disk('public')->exists('avatars/' . $user->avatar)) {
+        \Storage::disk('public')->delete('avatars/' . $user->avatar);
+    }
+
+    // Save new avatar to storage/app/public/avatars
+    $filename = time() . '.' . $request->avatar->extension();
+    $request->avatar->storeAs('avatars', $filename, 'public');
+
+    // Update user
+    $user->avatar = $filename;
+    $user->save();
+
+    return back()->with('status', 'avatar-updated');
+}
+
+
+    /**
+     * Delete user avatar.
+     */
+    public function deleteAvatar(Request $request): RedirectResponse
+{
+    $user = Auth::user();
+
+    if ($user->avatar && \Storage::disk('public')->exists('avatars/' . $user->avatar)) {
+        \Storage::disk('public')->delete('avatars/' . $user->avatar);
+    }
+
+    $user->avatar = null;
+    $user->save();
+
+    return back()->with('status', 'avatar-deleted');
+}
+
 
     /**
      * Delete the user's account.
